@@ -28,10 +28,12 @@
 * {
   box-sizing: border-box;
 }
+html {
+  background: var(--bg);
+}
 html,
 body {
-  height: 100%;
-  overflow: hidden;
+  min-height: 100%;
 }
 body {
   margin: 0;
@@ -45,7 +47,8 @@ body::before {
   top: 0;
   left: 0;
   right: 0;
-  height: 100vh;
+  bottom: 0;
+  min-height: 100%;
   background:
     radial-gradient(
       900px 540px at calc(12% + (var(--mouse-x) - 50%) * 0.08)
@@ -102,19 +105,10 @@ a:focus-visible {
   margin: 0 auto;
   padding: var(--pad);
   min-height: 100vh;
-  height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 28px;
-  /* Hide scrollbar */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
-}
-.wrap::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
 }
 
 header {
