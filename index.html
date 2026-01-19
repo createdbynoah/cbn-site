@@ -9,324 +9,7 @@
     />
     <title>Noah Rodgers — Solo Developer</title>
 
-    <style>
-      :root {
-        /* warm + minimal */
-        --bg: #0b0a08;
-        --text: rgba(255, 255, 255, 0.92);
-        --muted: rgba(255, 255, 255, 0.68);
-        --faint: rgba(255, 255, 255, 0.52);
-
-        --accent: #ffb454; /* amber */
-        --accent2: #ff6b4a; /* coral */
-        --line: rgba(255, 255, 255, 0.1);
-
-        --max: 980px;
-        --pad: clamp(18px, 4vw, 44px);
-        --h1: clamp(44px, 7vw, 82px);
-        --p: clamp(16px, 1.8vw, 18px);
-
-        --sans:
-          ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
-          Arial;
-        --mono:
-          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-          'Liberation Mono', 'Courier New', monospace;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        height: 100%;
-      }
-      body {
-        margin: 0;
-        font-family: var(--sans);
-        color: var(--text);
-        background:
-          radial-gradient(
-            900px 540px at 12% 10%,
-            rgba(255, 180, 84, 0.16),
-            transparent 60%
-          ),
-          radial-gradient(
-            900px 520px at 88% 25%,
-            rgba(255, 107, 74, 0.12),
-            transparent 62%
-          ),
-          radial-gradient(
-            700px 520px at 50% 110%,
-            rgba(255, 180, 84, 0.1),
-            transparent 55%
-          ),
-          var(--bg);
-        overflow-x: hidden;
-      }
-
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-      a:focus-visible {
-        outline: 2px solid rgba(255, 180, 84, 0.55);
-        outline-offset: 4px;
-        border-radius: 10px;
-      }
-
-      .wrap {
-        max-width: var(--max);
-        margin: 0 auto;
-        padding: var(--pad);
-        min-height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        gap: 28px;
-      }
-
-      header {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        gap: 16px;
-        padding-top: 4px;
-      }
-
-      .brand {
-        display: flex;
-        align-items: baseline;
-        gap: 12px;
-        min-width: 220px;
-      }
-
-      .brand strong {
-        font-size: 13px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.88);
-      }
-      .brand span {
-        font-family: var(--mono);
-        font-size: 12px;
-        color: var(--faint);
-      }
-
-      nav {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        font-family: var(--mono);
-        font-size: 12px;
-        color: var(--faint);
-      }
-      nav a {
-        padding: 6px 8px;
-        border-radius: 999px;
-        border: 1px solid transparent;
-        transition:
-          border-color 0.15s ease,
-          background 0.15s ease;
-      }
-      nav a:hover {
-        border-color: var(--line);
-        background: rgba(255, 255, 255, 0.03);
-        color: rgba(255, 255, 255, 0.78);
-      }
-
-      main {
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-        padding: clamp(12px, 2.5vw, 22px) 0;
-      }
-
-      .kicker {
-        font-family: var(--mono);
-        font-size: 12px;
-        color: var(--faint);
-        letter-spacing: 0.02em;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-      .kicker::before {
-        content: '';
-        width: 10px;
-        height: 10px;
-        border-radius: 999px;
-        background: linear-gradient(135deg, var(--accent), var(--accent2));
-        box-shadow: 0 0 20px rgba(255, 180, 84, 0.22);
-        flex: 0 0 auto;
-      }
-
-      h1 {
-        margin: 0;
-        font-size: var(--h1);
-        line-height: 0.98;
-        letter-spacing: -0.045em;
-      }
-      .sub {
-        margin: 0;
-        font-size: var(--p);
-        line-height: 1.55;
-        color: var(--muted);
-        max-width: 62ch;
-      }
-      .sub em {
-        font-style: normal;
-        color: rgba(255, 255, 255, 0.82);
-      }
-
-      /* Launchpad links: no cards, just a crisp list */
-      .launchpad {
-        margin-top: 12px;
-        border-top: 1px solid var(--line);
-        padding-top: 14px;
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 10px;
-        max-width: 720px;
-      }
-
-      .link {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 14px;
-        padding: 10px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        transition:
-          transform 0.15s ease,
-          color 0.15s ease;
-      }
-      .link:hover {
-        transform: translateY(-1px);
-      }
-
-      .left {
-        min-width: 0;
-        display: flex;
-        align-items: baseline;
-        gap: 12px;
-      }
-
-      .name {
-        font-weight: 650;
-        font-size: 15px;
-        color: rgba(255, 255, 255, 0.9);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .hint {
-        font-family: var(--mono);
-        font-size: 12px;
-        color: var(--faint);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .go {
-        font-family: var(--mono);
-        font-size: 12px;
-        color: rgba(255, 255, 255, 0.62);
-        flex: 0 0 auto;
-      }
-
-      /* Featured link styling */
-      .link.featured {
-        background: linear-gradient(
-          135deg,
-          rgba(255, 180, 84, 0.08),
-          rgba(255, 107, 74, 0.06)
-        );
-        border: 1px solid rgba(255, 180, 84, 0.25);
-        border-radius: 8px;
-        padding: 14px 12px;
-        margin: 6px 0;
-        border-bottom: 1px solid rgba(255, 180, 84, 0.25);
-      }
-      .link.featured .name {
-        color: var(--accent);
-      }
-
-      footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        flex-wrap: wrap;
-        border-top: 1px solid rgba(255, 255, 255, 0.06);
-        padding-top: 14px;
-        color: var(--faint);
-        font-size: 12px;
-        font-family: var(--mono);
-      }
-
-      /* tasteful motion */
-      .fade {
-        opacity: 0;
-        transform: translateY(10px);
-        transition:
-          opacity 0.6s ease,
-          transform 0.6s ease;
-      }
-      body.ready .fade {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      /* very subtle underline glow on hover */
-      .link .name {
-        background-image: linear-gradient(
-          90deg,
-          rgba(255, 180, 84, 0),
-          rgba(255, 180, 84, 0)
-        );
-        background-size: 100% 2px;
-        background-position: 0 110%;
-        background-repeat: no-repeat;
-        transition: background-image 0.15s ease;
-      }
-      .link:hover .name {
-        background-image: linear-gradient(
-          90deg,
-          rgba(255, 180, 84, 0),
-          rgba(255, 180, 84, 0.55),
-          rgba(255, 107, 74, 0.45)
-        );
-      }
-
-      @media (max-width: 700px) {
-        nav {
-          justify-content: flex-start;
-        }
-        .brand {
-          min-width: auto;
-        }
-        .hint {
-          display: none;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .fade {
-          transition: none;
-        }
-        nav a,
-        .link,
-        .link .name {
-          transition: none;
-        }
-        .link:hover {
-          transform: none;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
@@ -334,116 +17,144 @@
       <header class="fade">
         <div class="brand">
           <strong>Noah Rodgers</strong>
-          <span>solo dev</span>
+          <span>product engineer</span>
         </div>
-
-        <nav aria-label="Quick links">
-          <a href="#links">links</a>
-          <a href="mailto:dev@createdbynoah.com">email</a>
-        </nav>
       </header>
 
       <main class="fade">
-        <div class="kicker">Original products + client work</div>
+        <div class="kicker">
+          <span class="kicker-text"></span>
+          <span class="cursor">|</span>
+        </div>
 
         <h1>
-          I build calm software
+          I build rapid, scalable
           <br />
-          with sharp edges.
+          software for the AI age.
         </h1>
 
         <p class="sub">
-          I'm a solo developer who ships end-to-end: design, frontend, backend,
-          release. If you want <em>taste</em> and <em>velocity</em> in the same
-          room — start here.
+          I bridge the gap between creative vision and deployed code. Whether
+          <em>managing</em> global dev teams or <em>shipping</em> AI-native
+          mobile apps solo, I focus on velocity, aesthetics, and the bleeding
+          edge of what’s possible
         </p>
 
-        <section class="launchpad" id="links" aria-label="Launchpad links">
+        <div class="current-focus">
+          <h2 class="section-heading">Current Focus</h2>
           <a
-            class="link featured"
+            class="card"
             href="https://expense-planner.noahcancode.com"
             target="_blank"
             rel="noreferrer"
           >
-            <div class="left">
+            <div class="info">
               <div class="name">Expense Planner</div>
               <div class="hint">
-                current focus — Next.js full-stack budgeting app
+                Next.js full-stack budgeting app — building smart financial
+                tools for everyday use
               </div>
+              <div class="dates">Dec 2024 – Present</div>
             </div>
-            <div class="go">open →</div>
+            <div class="go">view →</div>
           </a>
+        </div>
 
-          <a
-            class="link"
-            href="https://github.com/createdbynoah/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <div class="left">
-              <div class="name">GitHub</div>
-              <div class="hint">@createdbynoah</div>
-            </div>
-            <div class="go">open →</div>
-          </a>
+        <section class="launchpad" id="links" aria-label="Launchpad links">
+          <div class="projects-section">
+            <h2 class="section-heading">Projects</h2>
+            <div class="projects-grid">
+              <a
+                class="card"
+                href="https://www.getbinit.com/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <div class="info">
+                  <div class="name">Binit</div>
+                  <div class="hint">
+                    Architected and shipped an AI-native mobile app for waste
+                    tracking using React Native.
+                  </div>
+                  <div class="dates">July 2024 – Dec 2025</div>
+                </div>
+                <div class="go">view →</div>
+              </a>
 
-          <a
-            class="link"
-            href="https://www.linkedin.com/in/noahrodgers10/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <div class="left">
-              <div class="name">LinkedIn</div>
-              <div class="hint">profile</div>
-            </div>
-            <div class="go">open →</div>
-          </a>
+              <a class="card" href="#" aria-disabled="true">
+                <div class="info">
+                  <div class="name">Fitness Wiki</div>
+                  <div class="hint">[coming soon]</div>
+                  <div class="dates">December 2025 – Present</div>
+                </div>
+                <div class="go">not yet →</div>
+              </a>
 
-          <a
-            class="link"
-            href="https://twitter.com/noahcancode"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <div class="left">
-              <div class="name">Twitter / X</div>
-              <div class="hint">@noahcancode</div>
+              <!-- <a class="card" href="#" target="_blank" rel="noreferrer">
+                <div class="info">
+                  <div class="name">Recipe Finder</div>
+                  <div class="hint">
+                    AI-powered recipe search with dietary preferences
+                  </div>
+                  <div class="dates">Jul 2024 – Aug 2024</div>
+                </div>
+                <div class="go">view →</div>
+              </a> -->
             </div>
-            <div class="go">open →</div>
-          </a>
+          </div>
 
-          <a class="link" href="mailto:dev@createdbynoah.com">
-            <div class="left">
-              <div class="name">dev@createdbynoah.com</div>
-              <div class="hint">email</div>
+          <div class="connect-section">
+            <h2 class="section-heading">Connect</h2>
+            <div class="connect-grid">
+              <a
+                class="connect-link"
+                href="https://github.com/createdbynoah/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <div class="name">GitHub</div>
+                <div class="handle">@createdbynoah</div>
+                <div class="arrow">→</div>
+              </a>
+
+              <a
+                class="connect-link"
+                href="https://www.linkedin.com/in/noahrodgers10/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <div class="name">LinkedIn</div>
+                <div class="handle">@noahrodgers10</div>
+                <div class="arrow">→</div>
+              </a>
+
+              <a
+                class="connect-link"
+                href="https://twitter.com/noahcancode"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <div class="name">Twitter / X</div>
+                <div class="handle">@noahcancode</div>
+                <div class="arrow">→</div>
+              </a>
+
+              <a class="connect-link" href="mailto:dev@createdbynoah.com">
+                <div class="name">Email</div>
+                <div class="handle">dev@createdbynoah.com</div>
+                <div class="arrow">→</div>
+              </a>
             </div>
-            <div class="go">send →</div>
-          </a>
+          </div>
         </section>
       </main>
 
       <footer class="fade">
-        <div>© <span id="year"></span> Noah Rodgers</div>
+        <div>© <span id="year"></span> Created by Noah | Noah Rodgers</div>
         <div>Press <strong>/</strong> to jump to links</div>
       </footer>
     </div>
 
-    <script>
-      // tiny JS: entrance + year + "/" shortcut
-      document.body.classList.add('ready');
-      document.getElementById('year').textContent = new Date().getFullYear();
-
-      window.addEventListener('keydown', (e) => {
-        if (e.key === '/' && !e.metaKey && !e.ctrlKey && !e.altKey) {
-          const tag = document.activeElement?.tagName?.toLowerCase();
-          if (tag === 'input' || tag === 'textarea') return;
-          e.preventDefault();
-          document
-            .getElementById('links')
-            .scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>
