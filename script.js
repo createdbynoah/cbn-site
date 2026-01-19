@@ -121,3 +121,35 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     kickerTextElement.textContent = kickerMessages[0];
   }
 }
+
+// Scroll-triggered project card reveals
+const scrollRevealContainers = document.querySelectorAll(
+  '[data-scroll-reveal]',
+);
+
+if (
+  scrollRevealContainers.length > 0 &&
+  !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+) {
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const items = entry.target.querySelectorAll('.scroll-reveal-item');
+          items.forEach((item) => {
+            item.classList.add('revealed');
+          });
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px',
+    },
+  );
+
+  scrollRevealContainers.forEach((container) => {
+    revealObserver.observe(container);
+  });
+}

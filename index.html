@@ -54,14 +54,14 @@
 
   <body>
     <div class="wrap">
-      <header class="fade">
+      <header class="fade fade-1">
         <div class="brand">
           <strong>Noah Rodgers</strong>
           <span>product engineer</span>
         </div>
       </header>
 
-      <main class="fade">
+      <main class="fade fade-2">
         <div class="kicker">
           <span class="kicker-text"></span>
           <span class="cursor">|</span>
@@ -80,7 +80,7 @@
           edge of what’s possible
         </p>
 
-        <div class="current-focus">
+        <div class="current-focus fade fade-3">
           <h2 class="section-heading">Current Focus</h2>
           <a
             class="card"
@@ -100,12 +100,16 @@
           </a>
         </div>
 
-        <section class="launchpad" id="links" aria-label="Launchpad links">
+        <section
+          class="launchpad fade fade-4"
+          id="links"
+          aria-label="Launchpad links"
+        >
           <div class="projects-section">
             <h2 class="section-heading">Projects</h2>
-            <div class="projects-grid">
+            <div class="projects-grid" data-scroll-reveal data-scroll-reveal>
               <a
-                class="card"
+                class="card scroll-reveal-item"
                 href="https://www.getbinit.com/"
                 target="_blank"
                 rel="noreferrer"
@@ -121,7 +125,7 @@
                 <div class="go">view →</div>
               </a>
 
-              <a class="card" href="#" aria-disabled="true">
+              <a class="card scroll-reveal-item" href="#" aria-disabled="true">
                 <div class="info">
                   <div class="name">Fitness Wiki</div>
                   <div class="hint">[coming soon]</div>
@@ -145,9 +149,9 @@
 
           <div class="connect-section">
             <h2 class="section-heading">Connect</h2>
-            <div class="connect-grid">
+            <div class="connect-grid" data-scroll-reveal>
               <a
-                class="connect-link"
+                class="connect-link scroll-reveal-item"
                 href="https://github.com/createdbynoah/"
                 target="_blank"
                 rel="noreferrer"
@@ -158,7 +162,7 @@
               </a>
 
               <a
-                class="connect-link"
+                class="connect-link scroll-reveal-item"
                 href="https://www.linkedin.com/in/noahrodgers10/"
                 target="_blank"
                 rel="noreferrer"
@@ -169,7 +173,7 @@
               </a>
 
               <a
-                class="connect-link"
+                class="connect-link scroll-reveal-item"
                 href="https://twitter.com/noahcancode"
                 target="_blank"
                 rel="noreferrer"
@@ -179,7 +183,10 @@
                 <div class="arrow">→</div>
               </a>
 
-              <a class="connect-link" href="mailto:dev@createdbynoah.com">
+              <a
+                class="connect-link scroll-reveal-item"
+                href="mailto:dev@createdbynoah.com"
+              >
                 <div class="name">Email</div>
                 <div class="handle">dev@createdbynoah.com</div>
                 <div class="arrow">→</div>
