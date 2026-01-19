@@ -299,7 +299,7 @@ h1 {
   padding-top: 14px;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 10px;
+  gap: 32px;
 }
 
 @media (min-width: 968px) {
@@ -550,6 +550,7 @@ footer {
   flex-wrap: wrap;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   padding-top: 14px;
+  padding-bottom: 32px;
   color: var(--faint);
   font-size: 12px;
   font-family: var(--mono);
@@ -558,6 +559,9 @@ footer > div:last-child {
   display: none;
 }
 @media (min-width: 768px) {
+  footer {
+    padding-bottom: 0;
+  }
   footer > div:last-child {
     display: block;
   }
