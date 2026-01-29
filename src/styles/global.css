@@ -113,7 +113,7 @@ a:focus-visible {
 header {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   gap: 16px;
   padding-top: 4px;
 }
@@ -123,6 +123,7 @@ header {
   align-items: baseline;
   gap: 12px;
   min-width: 220px;
+  white-space: nowrap;
 }
 
 .brand strong {
@@ -137,7 +138,7 @@ header {
   color: var(--faint);
 }
 
-nav {
+.nav-desktop {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
@@ -146,7 +147,7 @@ nav {
   font-size: 12px;
   color: var(--faint);
 }
-nav a {
+.nav-desktop a {
   padding: 6px 8px;
   border-radius: 999px;
   border: 1px solid transparent;
@@ -154,10 +155,117 @@ nav a {
     border-color 0.15s ease,
     background 0.15s ease;
 }
-nav a:hover {
+.nav-desktop a:hover {
   border-color: var(--line);
   background: rgba(255, 255, 255, 0.03);
   color: rgba(255, 255, 255, 0.78);
+}
+
+/* ── Hamburger button ── */
+.hamburger {
+  display: none;
+  position: fixed;
+  top: var(--pad);
+  right: var(--pad);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  padding: 6px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 110;
+  transition: border-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.hamburger:hover {
+  border-color: var(--line);
+}
+.hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 2px;
+  transition:
+    transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.25s ease,
+    width 0.25s ease;
+  transform-origin: center;
+}
+
+/* Hamburger → X animation */
+.hamburger.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+  width: 0;
+}
+.hamburger.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ── Drawer overlay ── */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+  z-index: 90;
+}
+.drawer-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ── Mobile drawer ── */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(280px, 80vw);
+  height: 100vh;
+  height: 100dvh;
+  background: var(--bg);
+  border-left: 1px solid var(--line);
+  padding: 80px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 100;
+  font-family: var(--mono);
+  font-size: 14px;
+  overflow-y: auto;
+}
+.drawer.open {
+  transform: translateX(0);
+}
+.drawer a {
+  padding: 14px 16px;
+  border-radius: 8px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+.drawer a:hover,
+.drawer a.active {
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 main {
@@ -665,13 +773,18 @@ body.ready .fade {
 }
 
 @media (max-width: 700px) {
-  nav {
-    justify-content: flex-start;
+  .nav-desktop {
+    display: none;
+  }
+  .hamburger {
+    display: flex;
+  }
+  header {
+    padding-right: 48px;
   }
   .brand {
     min-width: auto;
   }
-  /* Keep project descriptions visible on mobile, hide only for old .link elements if any */
   .link .hint {
     display: none;
   }
@@ -690,7 +803,7 @@ body.ready .fade {
     transform: scale(1);
     transition: none;
   }
-  nav a,
+  .nav-desktop a,
   .link,
   .link .name,
   .card,
@@ -705,6 +818,11 @@ body.ready .fade {
   .cursor {
     animation: none;
     opacity: 1;
+  }
+  .hamburger span,
+  .drawer,
+  .drawer-overlay {
+    transition: none;
   }
 }
 
