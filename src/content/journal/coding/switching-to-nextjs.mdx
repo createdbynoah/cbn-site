@@ -1,0 +1,49 @@
+---
+title: "Why I Switched to Next.js 15"
+description: "A deep dive into my migration from vanilla HTML to Next.js 15 with App Router and static export."
+slug: "why-nextjs-15"
+pubDate: 2026-02-01
+ogTitle: "Next.js 15 Migration Guide"
+ogDescription: "How I migrated my portfolio site to Next.js 15 with static export."
+tags:
+  - next.js
+  - typescript
+  - migration
+draft: false
+---
+
+# Why I Switched to Next.js 15
+
+After years of hand-rolling HTML and tweaking build scripts, I finally bit the bullet and migrated my portfolio to **Next.js 15** with the App Router. Here's why — and how it went.
+
+## The tipping point
+
+Static site generators are great until you need MDX, image optimization, and proper routing all at once. I was juggling too many bespoke scripts. Next.js gave me all of it out of the box.
+
+Here's a great walkthrough that convinced me to make the jump:
+
+<YouTubeEmbed videoId="dQw4w9WgXcQ" title="Next.js 15 Overview" />
+
+## The migration process
+
+The biggest lift was converting my flat HTML pages into the App Router's file-based routing. But once I had the layout shell in place, everything else snapped together fast.
+
+### Key decisions
+
+1. **Static export** — I don't need a server. `output: 'export'` gives me a folder of HTML I can drop on Cloudflare Pages.
+2. **MDX for content** — Writing posts in Markdown with JSX components is the sweet spot between authoring comfort and flexibility.
+3. **Zod schemas** — Frontmatter validation at build time catches mistakes before they ship.
+
+### Try it yourself
+
+Here's a minimal Next.js 15 App Router setup you can explore:
+
+<CodeSandbox sandboxId="new" view="preview" title="Next.js 15 Starter" />
+
+## What I'd do differently
+
+If I started over, I'd set up the content layer _first_ — schemas, readers, MDX pipeline — before touching any UI. Getting the data model right early makes everything downstream simpler.
+
+## Wrapping up
+
+The migration took a weekend of focused work. The result is a site that's faster to build, easier to maintain, and more fun to write for. If you're on the fence about Next.js 15, I'd say go for it.

@@ -20,12 +20,14 @@ export type ProjectFrontmatter = z.infer<typeof projectSchema>;
 export const journalSchema = z.object({
   title: z.string(),
   description: z.string(),
+  slug: z.string().optional(),
   pubDate: z.coerce.date(),
   updatedDate: z.coerce.date().optional(),
   heroImage: z.string().optional(),
   ogImage: z.string().optional(),
+  ogTitle: z.string().optional(),
+  ogDescription: z.string().optional(),
   tags: z.array(z.string()).default([]),
-  category: z.string().optional(),
   draft: z.boolean().default(false),
 });
 

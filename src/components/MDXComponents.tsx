@@ -1,5 +1,6 @@
 import type { MDXComponents as MDXComponentsType } from 'mdx/types';
 import LinkPreview from './LinkPreview';
+import { IframeEmbed, YouTubeEmbed, TweetEmbed, CodeSandbox } from './embeds';
 
 const MDXComponents: MDXComponentsType = {
   a: (props) => (
@@ -24,6 +25,10 @@ const MDXComponents: MDXComponentsType = {
     />
   ),
   LinkPreview,
+  IframeEmbed,
+  YouTubeEmbed,
+  TweetEmbed,
+  CodeSandbox,
 };
 
 export default MDXComponents;

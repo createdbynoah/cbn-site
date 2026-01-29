@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import { getAllJournalPosts } from '@/lib/content';
+import { getAllJournalPosts, getAllCategories } from '@/lib/content';
 import { readingTime } from '@/lib/utils';
-import JournalPostCard from '@/components/JournalPostCard';
+import CategoryFilter from '@/components/CategoryFilter';
 
 export const metadata: Metadata = {
   title: 'Journal',
@@ -11,6 +11,18 @@ export const metadata: Metadata = {
 
 export default async function JournalPage() {
   const posts = await getAllJournalPosts();
+  const categories = await getAllCategories();
+
+  const serializedPosts = posts.map((post) => ({
+    slug: post.slug,
+    title: post.frontmatter.title,
+    description: post.frontmatter.description,
+    pubDate: post.frontmatter.pubDate.toISOString(),
+    readingTime: readingTime(post.content),
+    tags: post.frontmatter.tags,
+    heroImage: post.frontmatter.heroImage,
+    category: post.category,
+  }));
 
   return (
     <main className="fade fade-2">
@@ -22,34 +34,7 @@ export default async function JournalPage() {
         </p>
       </div>
 
-      {posts.length === 0 ? (
-        <div
-          style={{
-            padding: '48px 0',
-            textAlign: 'center',
-            color: 'var(--faint)',
-            fontFamily: 'var(--mono)',
-            fontSize: '13px',
-          }}
-        >
-          No posts yet — check back soon.
-        </div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {posts.map((post) => (
-            <JournalPostCard
-              key={post.slug}
-              slug={post.slug}
-              title={post.frontmatter.title}
-              description={post.frontmatter.description}
-              pubDate={post.frontmatter.pubDate}
-              readingTime={readingTime(post.content)}
-              tags={post.frontmatter.tags}
-              heroImage={post.frontmatter.heroImage}
-            />
-          ))}
-        </div>
-      )}
+      <CategoryFilter posts={serializedPosts} categories={categories} />
     </main>
   );
 }

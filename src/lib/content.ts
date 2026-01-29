@@ -21,6 +21,41 @@ function readContentFiles(subdir: string) {
     });
 }
 
+function readContentFilesRecursive(subdir: string) {
+  const dir = path.join(CONTENT_DIR, subdir);
+  if (!fs.existsSync(dir)) return [];
+  const results: { slug: string; data: Record<string, unknown>; content: string; category: string }[] = [];
+  const seenSlugs = new Set<string>();
+
+  function walk(currentDir: string, category: string) {
+    const entries = fs.readdirSync(currentDir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        walk(path.join(currentDir, entry.name), entry.name);
+      } else if (entry.name.endsWith('.md') || entry.name.endsWith('.mdx')) {
+        const raw = fs.readFileSync(path.join(currentDir, entry.name), 'utf-8');
+        const { data, content } = matter(raw);
+        const slug = (data.slug as string) || entry.name.replace(/\.(md|mdx)$/, '');
+        if (seenSlugs.has(slug)) {
+          throw new Error(`Duplicate journal slug "${slug}"`);
+        }
+        seenSlugs.add(slug);
+        results.push({ slug, data, content, category });
+      }
+    }
+  }
+
+  // Only walk subdirectories, not root files
+  const topEntries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of topEntries) {
+    if (entry.isDirectory()) {
+      walk(path.join(dir, entry.name), entry.name);
+    }
+  }
+
+  return results;
+}
+
 export async function getAllProjects() {
   const files = readContentFiles('projects');
   return files
@@ -33,12 +68,13 @@ export async function getAllProjects() {
 }
 
 export async function getAllJournalPosts(includeDrafts = false) {
-  const files = readContentFiles('journal');
+  const files = readContentFilesRecursive('journal');
   return files
-    .map(({ slug, data, content }) => ({
+    .map(({ slug, data, content, category }) => ({
       slug,
       frontmatter: journalSchema.parse(data),
       content,
+      category,
     }))
     .filter((post) => includeDrafts || !post.frontmatter.draft)
     .sort(
@@ -50,6 +86,12 @@ export async function getAllJournalPosts(includeDrafts = false) {
 export async function getJournalPost(slug: string) {
   const posts = await getAllJournalPosts(true);
   return posts.find((p) => p.slug === slug) ?? null;
+}
+
+export async function getAllCategories() {
+  const posts = await getAllJournalPosts();
+  const categories = new Set(posts.map((p) => p.category));
+  return [...categories].sort();
 }
 
 export async function getProject(slug: string) {

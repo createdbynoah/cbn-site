@@ -5,7 +5,7 @@ interface JournalPostCardProps {
   slug: string;
   title: string;
   description: string;
-  pubDate: Date;
+  pubDate: string;
   readingTime: string;
   tags: string[];
   heroImage?: string;

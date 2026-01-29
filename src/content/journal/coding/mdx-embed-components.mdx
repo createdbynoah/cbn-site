@@ -1,0 +1,109 @@
+---
+title: "Building an MDX Embed Suite"
+description: "How I built reusable embed components for YouTube, tweets, CodeSandbox, and generic iframes — all rendered statically."
+pubDate: 2026-02-05
+tags:
+  - mdx
+  - react
+  - components
+draft: false
+---
+
+# Building an MDX Embed Suite
+
+One of the first things I wanted after setting up MDX was a clean way to embed rich media. No third-party scripts, no layout shift, no cookie banners. Here's the system I landed on.
+
+## The components
+
+### YouTube — privacy-enhanced
+
+The `YouTubeEmbed` component uses `youtube-nocookie.com` so no tracking cookies are set until the viewer actually plays the video.
+
+<YouTubeEmbed videoId="jNQXAC9IVRw" title="Me at the zoo — the first YouTube video" />
+
+You use it like this in your `.mdx` file:
+
+```mdx
+<YouTubeEmbed videoId="jNQXAC9IVRw" title="Me at the zoo" />
+```
+
+The `startAt` prop lets you skip to a specific timestamp (in seconds):
+
+```mdx
+<YouTubeEmbed videoId="jNQXAC9IVRw" startAt="5" title="Skipping ahead" />
+```
+
+### Tweets — no JavaScript required
+
+The `TweetEmbed` renders a styled card with the tweet content you provide via props. No Twitter/X embed script, no iframe, no client-side fetch. Just static HTML.
+
+<TweetEmbed
+  tweetId="20"
+  author="Jack Dorsey"
+  handle="@jack"
+  content="just setting up my twttr"
+  date="Mar 21, 2006"
+/>
+
+Usage:
+
+```mdx
+<TweetEmbed
+  tweetId="20"
+  author="Jack Dorsey"
+  handle="@jack"
+  content="just setting up my twttr"
+  date="Mar 21, 2006"
+/>
+```
+
+All fields except `tweetId` are optional — but filling them in makes the card useful without requiring any API calls.
+
+### CodeSandbox — interactive playgrounds
+
+Drop a live code editor right into your post:
+
+<CodeSandbox sandboxId="new" view="split" title="Try it live" />
+
+Supports three view modes:
+- `editor` — just the code
+- `preview` — just the output
+- `split` — side by side (the default)
+
+```mdx
+<CodeSandbox sandboxId="new" view="split" />
+```
+
+### Generic iframe — for everything else
+
+The `IframeEmbed` is the foundation component. Use it for anything that has a URL:
+
+<IframeEmbed
+  src="https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio"
+  title="MDN: aspect-ratio"
+  aspectRatio="4/3"
+/>
+
+```mdx
+<IframeEmbed
+  src="https://example.com"
+  title="Example"
+  aspectRatio="4/3"
+  maxWidth="600px"
+/>
+```
+
+## Design decisions
+
+- **No client-side JS** for tweets — static cards are faster and respect privacy
+- **`aspect-ratio` CSS** instead of the padding-bottom hack — cleaner and well-supported now
+- **`youtube-nocookie.com`** — privacy-enhanced mode by default
+- **Dark theme** for CodeSandbox embeds to match the site
+
+## Standard images
+
+Regular markdown images still work exactly as expected:
+
+![Placeholder](/assets/og-image.png)
+
+Store images in `public/assets/journal/` and reference them with absolute paths.

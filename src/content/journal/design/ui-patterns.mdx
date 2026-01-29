@@ -1,0 +1,55 @@
+---
+title: "UI Patterns I Keep Coming Back To"
+description: "A running list of small interface details that consistently work well — pill filters, card grids, and subtle motion."
+pubDate: 2026-02-03
+tags:
+  - design
+  - ui
+  - patterns
+draft: false
+---
+
+# UI Patterns I Keep Coming Back To
+
+After building enough interfaces, you start recognizing the same handful of patterns that just _work_. Not flashy, not trendy — just reliable. Here are the ones I reach for most.
+
+## Pill filters
+
+A horizontal row of small rounded buttons that filter content in-place. No page reload, no dropdown, no checkbox forest. You see them on this site's journal page — tap a category, the list updates.
+
+Why they work:
+- **All options visible** at a glance
+- **Single interaction** to filter
+- **Zero learning curve** — it's just buttons
+- Works on touch and desktop equally well
+
+The trick is keeping the pill count low. If you have more than 6–8 categories, switch to a dropdown or search.
+
+## Card grids with hover lift
+
+Cards with a subtle `translateY(-4px)` on hover. That's it. No flip animations, no parallax, no 3D transforms. Just a tiny lift that says "this is interactive."
+
+Pair it with a border-color transition (`rgba(255,255,255,0.08)` → `0.14`) and you've got a tactile feel without any performance cost.
+
+## Monospace metadata
+
+Dates, reading times, tag labels — anything that's _about_ the content rather than _the_ content itself — rendered in a monospace font at a smaller size. It creates a clear visual hierarchy between the headline, the description, and the meta details.
+
+## Staggered entrance animations
+
+When a page loads, cards animate in one after another with incremental `transition-delay`. The first card appears immediately, the second 120ms later, the third 240ms later. Feels alive without being slow.
+
+The key is keeping individual delays under 600ms total and respecting `prefers-reduced-motion`.
+
+## Dark backgrounds with warm accents
+
+A near-black background (`#0b0a08`) with amber (`#ffb454`) and coral (`#ff6b4a`) accents. The warmth offsets the darkness and feels more inviting than the cold blue-on-black that's everywhere.
+
+## What I avoid
+
+- **Carousels** — people don't scroll them
+- **Hamburger menus on desktop** — just show the links
+- **Scroll hijacking** — let the browser do its job
+- **Toast notifications for non-errors** — just update the UI directly
+
+These patterns aren't original. They're just the ones that hold up over time.

@@ -22,14 +22,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const post = await getJournalPost(slug);
   if (!post) return {};
 
+  const ogTitle = post.frontmatter.ogTitle || post.frontmatter.title;
+  const ogDesc = post.frontmatter.ogDescription || post.frontmatter.description;
   const ogImage = post.frontmatter.ogImage || post.frontmatter.heroImage || '/assets/og-image.png';
 
   return {
     title: post.frontmatter.title,
     description: post.frontmatter.description,
     openGraph: {
-      title: post.frontmatter.title,
-      description: post.frontmatter.description,
+      title: ogTitle,
+      description: ogDesc,
       type: 'article',
       publishedTime: post.frontmatter.pubDate.toISOString(),
       ...(post.frontmatter.updatedDate && {
@@ -39,8 +41,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: 'summary_large_image',
-      title: post.frontmatter.title,
-      description: post.frontmatter.description,
+      title: ogTitle,
+      description: ogDesc,
       images: [ogImage],
     },
   };
