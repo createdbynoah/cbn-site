@@ -1,16 +1,16 @@
 ---
 name: Expense Planner
-shortDescription: "Next.js full-stack budgeting app — building smart financial tools for everyday use"
-description: "A full-stack budgeting application built with Next.js, featuring intelligent expense categorization, recurring transaction tracking, and visual spending analytics. Designed to make personal finance management intuitive and actionable."
-url: "https://expense-planner.noahcancode.com"
+shortDescription: 'Next.js full-stack budgeting app — building smart financial tools for everyday use'
+description: 'A full-stack budgeting application built with Next.js, featuring intelligent expense categorization, recurring transaction tracking, and visual spending analytics. Designed to make personal finance management intuitive and actionable.'
+url: 'https://expense-planner.noahcancode.com'
 techStack:
   - Next.js
   - TypeScript
   - Prisma
   - PostgreSQL
-  - Tailwind CSS
+  - Tailwind
 status: active
-featured: true
+featured: false
 currentFocus: true
 dateStart: 2024-12-01
 order: 0

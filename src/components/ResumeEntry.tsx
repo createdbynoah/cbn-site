@@ -22,7 +22,7 @@ export default function ResumeEntry({
 
   return (
     <Wrapper
-      className="card"
+      className="card scroll-reveal-item"
       style={{ display: 'flex', flexDirection: 'column', gap: '8px', cursor: url ? 'pointer' : 'default' }}
       {...wrapperProps}
     >

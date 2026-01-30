@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { resume } from '@/data/resume';
 import SectionHeading from '@/components/SectionHeading';
+import ScrollReveal from '@/components/ScrollReveal';
 import ResumeEntry from '@/components/ResumeEntry';
 import SkillGroup from '@/components/SkillGroup';
 
@@ -23,7 +24,7 @@ export default function ResumePage() {
 
       <section>
         <SectionHeading>Experience</SectionHeading>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <ScrollReveal style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {resume.experience.map((exp) => (
             <ResumeEntry
               key={exp.company + exp.role}
@@ -35,33 +36,35 @@ export default function ResumePage() {
               url={exp.url}
             />
           ))}
-        </div>
+        </ScrollReveal>
       </section>
 
       <section>
         <SectionHeading>Skills</SectionHeading>
-        <div
-          className="card"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '4px',
-            padding: '20px',
-          }}
-        >
-          {resume.skills.map((group) => (
-            <SkillGroup
-              key={group.category}
-              category={group.category}
-              items={group.items}
-            />
-          ))}
-        </div>
+        <ScrollReveal>
+          <div
+            className="card scroll-reveal-item"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px',
+              padding: '20px',
+            }}
+          >
+            {resume.skills.map((group) => (
+              <SkillGroup
+                key={group.category}
+                category={group.category}
+                items={group.items}
+              />
+            ))}
+          </div>
+        </ScrollReveal>
       </section>
 
       <section>
         <SectionHeading>Education</SectionHeading>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <ScrollReveal style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {resume.education.map((edu) => (
             <ResumeEntry
               key={edu.institution + edu.degree}
@@ -71,7 +74,7 @@ export default function ResumePage() {
               highlights={edu.highlights || []}
             />
           ))}
-        </div>
+        </ScrollReveal>
       </section>
     </main>
   );
