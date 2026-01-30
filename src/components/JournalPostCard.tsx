@@ -27,7 +27,7 @@ export default function JournalPostCard({
   });
 
   return (
-    <Link href={`/journal/${slug}`} className="card" style={{ textDecoration: 'none' }}>
+    <Link href={`/journal/${slug}`} className="card scroll-reveal-item" style={{ textDecoration: 'none' }}>
       {heroImage && (
         <img
           src={heroImage}

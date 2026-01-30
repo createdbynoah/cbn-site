@@ -111,6 +111,7 @@ a:focus-visible {
 }
 
 header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -164,9 +165,10 @@ header {
 /* ── Hamburger button ── */
 .hamburger {
   display: none;
-  position: fixed;
-  top: var(--pad);
-  right: var(--pad);
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -542,6 +544,10 @@ h1 {
   grid-column: 1 / -1;
 }
 
+.card .tech-stack {
+  grid-column: 1 / -1;
+}
+
 .card .info {
   display: contents;
 }
@@ -685,6 +691,10 @@ footer > div:last-child {
 body.ready .fade {
   opacity: 1;
   transform: translateY(0);
+}
+/* Prevent header from creating a stacking context that traps the hamburger */
+body.ready header.fade {
+  transform: none;
 }
 
 /* staggered entrance for sections */

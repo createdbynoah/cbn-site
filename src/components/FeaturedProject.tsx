@@ -46,7 +46,7 @@ export default function FeaturedProject({
             </div>
           )}
           {showTechStack && techStack && techStack.length > 0 && (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}>
+            <div className="tech-stack" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}>
               {techStack.map((tech) => (
                 <TagPill key={tech} label={tech} />
               ))}

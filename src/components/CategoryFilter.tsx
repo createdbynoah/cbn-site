@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 import JournalPostCard from './JournalPostCard';
 
 interface SerializedPost {
@@ -21,8 +22,23 @@ interface CategoryFilterProps {
 
 export default function CategoryFilter({ posts, categories }: CategoryFilterProps) {
   const [active, setActive] = useState<string | null>(null);
+  const listRef = useScrollReveal();
+  const isFirstRender = useRef(true);
 
   const filtered = active ? posts.filter((p) => p.category === active) : posts;
+
+  // On filter change (not initial render), immediately reveal all items
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (listRef.current) {
+      listRef.current.querySelectorAll('.scroll-reveal-item').forEach((item) => {
+        item.classList.add('revealed');
+      });
+    }
+  }, [active, listRef]);
 
   return (
     <>
@@ -87,7 +103,7 @@ export default function CategoryFilter({ posts, categories }: CategoryFilterProp
           No posts yet — check back soon.
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div ref={listRef} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {filtered.map((post) => (
             <JournalPostCard
               key={post.slug}

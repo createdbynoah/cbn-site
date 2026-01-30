@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 interface UseTypewriterOptions {
   messages: string[];
@@ -20,49 +20,45 @@ export function useTypewriter({
   startDelay = 800,
 }: UseTypewriterOptions) {
   const [text, setText] = useState('');
-  const messageIndexRef = useRef(0);
-  const charIndexRef = useRef(0);
-  const isDeletingRef = useRef(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const startedRef = useRef(false);
-
-  const tick = useCallback(() => {
-    const currentMessage = messages[messageIndexRef.current];
-
-    if (!isDeletingRef.current && charIndexRef.current < currentMessage.length) {
-      charIndexRef.current++;
-      setText(currentMessage.substring(0, charIndexRef.current));
-      timerRef.current = setTimeout(tick, typingSpeed);
-    } else if (!isDeletingRef.current && charIndexRef.current === currentMessage.length) {
-      isDeletingRef.current = true;
-      timerRef.current = setTimeout(tick, pauseAfterComplete);
-    } else if (isDeletingRef.current && charIndexRef.current > 0) {
-      charIndexRef.current--;
-      setText(currentMessage.substring(0, charIndexRef.current));
-      timerRef.current = setTimeout(tick, deletingSpeed);
-    } else if (isDeletingRef.current && charIndexRef.current === 0) {
-      isDeletingRef.current = false;
-      messageIndexRef.current = (messageIndexRef.current + 1) % messages.length;
-      timerRef.current = setTimeout(tick, pauseAfterDelete);
-    }
-  }, [messages, typingSpeed, deletingSpeed, pauseAfterComplete, pauseAfterDelete]);
 
   useEffect(() => {
-    if (startedRef.current) return;
-    startedRef.current = true;
+    setText('');
 
-    // Respect reduced motion
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setText(messages[0]);
       return;
     }
 
-    timerRef.current = setTimeout(tick, startDelay);
+    let messageIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let timer: ReturnType<typeof setTimeout>;
 
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [messages, startDelay, tick]);
+    function tick() {
+      const currentMessage = messages[messageIndex];
+
+      if (!isDeleting && charIndex < currentMessage.length) {
+        charIndex++;
+        setText(currentMessage.substring(0, charIndex));
+        timer = setTimeout(tick, typingSpeed);
+      } else if (!isDeleting && charIndex === currentMessage.length) {
+        isDeleting = true;
+        timer = setTimeout(tick, pauseAfterComplete);
+      } else if (isDeleting && charIndex > 0) {
+        charIndex--;
+        setText(currentMessage.substring(0, charIndex));
+        timer = setTimeout(tick, deletingSpeed);
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        messageIndex = (messageIndex + 1) % messages.length;
+        timer = setTimeout(tick, pauseAfterDelete);
+      }
+    }
+
+    timer = setTimeout(tick, startDelay);
+
+    return () => clearTimeout(timer);
+  }, [messages, typingSpeed, deletingSpeed, pauseAfterComplete, pauseAfterDelete, startDelay]);
 
   return text;
 }

@@ -22,60 +22,50 @@ export default function ResumePage() {
         </p>
       </div>
 
-      <section>
-        <SectionHeading>Experience</SectionHeading>
-        <ScrollReveal style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {resume.experience.map((exp) => (
-            <ResumeEntry
-              key={exp.company + exp.role}
-              title={exp.role}
-              subtitle={exp.company}
-              location={exp.location}
-              dateRange={`${exp.dateStart} – ${exp.dateEnd || 'Present'}`}
-              highlights={exp.highlights}
-              url={exp.url}
+      <ScrollReveal style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <SectionHeading className="scroll-reveal-item">Experience</SectionHeading>
+        {resume.experience.map((exp) => (
+          <ResumeEntry
+            key={exp.company + exp.role}
+            title={exp.role}
+            subtitle={exp.company}
+            location={exp.location}
+            dateRange={`${exp.dateStart} – ${exp.dateEnd || 'Present'}`}
+            highlights={exp.highlights}
+            url={exp.url}
+          />
+        ))}
+
+        <SectionHeading className="scroll-reveal-item">Skills</SectionHeading>
+        <div
+          className="card scroll-reveal-item"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px',
+            padding: '20px',
+          }}
+        >
+          {resume.skills.map((group) => (
+            <SkillGroup
+              key={group.category}
+              category={group.category}
+              items={group.items}
             />
           ))}
-        </ScrollReveal>
-      </section>
+        </div>
 
-      <section>
-        <SectionHeading>Skills</SectionHeading>
-        <ScrollReveal>
-          <div
-            className="card scroll-reveal-item"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4px',
-              padding: '20px',
-            }}
-          >
-            {resume.skills.map((group) => (
-              <SkillGroup
-                key={group.category}
-                category={group.category}
-                items={group.items}
-              />
-            ))}
-          </div>
-        </ScrollReveal>
-      </section>
-
-      <section>
-        <SectionHeading>Education</SectionHeading>
-        <ScrollReveal style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {resume.education.map((edu) => (
-            <ResumeEntry
-              key={edu.institution + edu.degree}
-              title={edu.degree}
-              subtitle={`${edu.institution} · ${edu.field}`}
-              dateRange={`${edu.dateStart}${edu.dateEnd ? ` – ${edu.dateEnd}` : ''}`}
-              highlights={edu.highlights || []}
-            />
-          ))}
-        </ScrollReveal>
-      </section>
+        <SectionHeading className="scroll-reveal-item">Education</SectionHeading>
+        {resume.education.map((edu) => (
+          <ResumeEntry
+            key={edu.institution + edu.degree}
+            title={edu.degree}
+            subtitle={`${edu.institution} · ${edu.field}`}
+            dateRange={`${edu.dateStart}${edu.dateEnd ? ` – ${edu.dateEnd}` : ''}`}
+            highlights={edu.highlights || []}
+          />
+        ))}
+      </ScrollReveal>
     </main>
   );
 }
