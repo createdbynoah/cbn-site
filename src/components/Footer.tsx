@@ -18,7 +18,7 @@ export default function Footer() {
           </span>
         )}
         <Link href="/quiz" className="quiz-footer-link">
-          Take the quiz
+          Quiz me
         </Link>
       </div>
     </footer>

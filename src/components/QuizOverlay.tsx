@@ -20,11 +20,11 @@ interface QuizState {
 const SCORE_MESSAGES: Record<number, { headline: string; body: string }> = {
   0: {
     headline: 'Zero for five.',
-    body: "This is actually impressive in its own way. You managed to avoid every correct answer. Statistically, that takes talent.",
+    body: 'This is actually impressive in its own way. You managed to avoid every correct answer. Statistically, that takes talent.',
   },
   1: {
     headline: 'Oof.',
-    body: "Did you just guess on all of them? The site will still be here when you come back.",
+    body: 'Did you just guess on all of them? The site will still be here when you come back.',
   },
   2: {
     headline: 'Room for improvement.',
@@ -210,12 +210,17 @@ export default function QuizOverlay({ quizData }: { quizData: QuizData }) {
       aria-modal="true"
       aria-label="Quiz"
     >
-      <div aria-live="polite" aria-atomic="true" className="sr-only" ref={announceRef} />
+      <div
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+        ref={announceRef}
+      />
 
       {/* ── Intro ── */}
       {state.phase === 'intro' && (
         <div className="quiz-intro quiz-fade-in">
-          <h1 className="quiz-title">How well do you know Noah Rodgers?</h1>
+          <h1 className="quiz-title">How well do you know Noah?</h1>
           <p className="quiz-subtitle">
             Five questions. Based on what you&apos;ll find around this site.
           </p>
@@ -231,7 +236,10 @@ export default function QuizOverlay({ quizData }: { quizData: QuizData }) {
 
       {/* ── Question ── */}
       {state.phase === 'question' && currentQuestion && state.permutation && (
-        <div className="quiz-question-screen quiz-fade-in" key={state.currentQuestionIndex}>
+        <div
+          className="quiz-question-screen quiz-fade-in"
+          key={state.currentQuestionIndex}
+        >
           {/* Progress */}
           <div className="quiz-progress">
             {state.permutation.questions.map((_, i) => (
@@ -272,7 +280,9 @@ export default function QuizOverlay({ quizData }: { quizData: QuizData }) {
               return (
                 <button
                   key={i}
-                  ref={(el) => { optionRefs.current[i] = el; }}
+                  ref={(el) => {
+                    optionRefs.current[i] = el;
+                  }}
                   className={className}
                   onClick={() => selectOption(i)}
                   disabled={state.answerRevealed}
@@ -280,9 +290,10 @@ export default function QuizOverlay({ quizData }: { quizData: QuizData }) {
                 >
                   <span className="quiz-option-badge">{i + 1}</span>
                   <span className="quiz-option-text">{option}</span>
-                  {state.answerRevealed && i === currentQuestion.correctIndex && (
-                    <span className="quiz-option-label">Correct</span>
-                  )}
+                  {state.answerRevealed &&
+                    i === currentQuestion.correctIndex && (
+                      <span className="quiz-option-label">Correct</span>
+                    )}
                   {state.answerRevealed &&
                     i === state.selectedOption &&
                     i !== currentQuestion.correctIndex && (
