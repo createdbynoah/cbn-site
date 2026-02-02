@@ -668,15 +668,31 @@ footer {
   font-size: 12px;
   font-family: var(--mono);
 }
-footer > div:last-child {
+/* footer right section */
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.footer-hint {
   display: none;
+}
+.quiz-footer-link {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+.quiz-footer-link:hover {
+  opacity: 1;
 }
 @media (min-width: 768px) {
   footer {
     padding-bottom: 0;
   }
-  footer > div:last-child {
-    display: block;
+  .footer-hint {
+    display: inline;
   }
 }
 
