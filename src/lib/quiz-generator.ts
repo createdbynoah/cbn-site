@@ -2,6 +2,9 @@ import { resume } from '@/data/resume';
 import { getAllProjects, getAllJournalPosts } from '@/lib/content';
 import { KICKER_MESSAGES, SOCIAL_LINKS } from '@/lib/constants';
 import type { QuizQuestion, QuizData } from './quiz-types';
+import { distillSiteContent } from './quiz-content-distiller';
+import { generateAIQuizData } from './quiz-ai-generator';
+import { readCache, writeCache } from './quiz-cache';
 
 // ── Seeded PRNG (deterministic shuffle) ──────────────────────────
 function seededRandom(seed: number) {
@@ -398,7 +401,7 @@ const TIER_DISTRIBUTION: [number, number, number][] = [
   [0, 2, 3],
 ];
 
-export async function generateQuizData(): Promise<QuizData> {
+async function generateTemplateQuizData(): Promise<QuizData> {
   const projects = await getAllProjects();
   const journalPosts = await getAllJournalPosts();
 
@@ -441,4 +444,23 @@ export async function generateQuizData(): Promise<QuizData> {
   });
 
   return { permutations };
+}
+
+// ── Orchestrator: cache → AI → template ──────────────────────────
+export async function generateQuizData(): Promise<QuizData> {
+  const { summary, fingerprint } = await distillSiteContent();
+
+  const cached = readCache(fingerprint);
+  if (cached) return cached;
+
+  const aiData = await generateAIQuizData(summary);
+  if (aiData) {
+    writeCache(fingerprint, aiData, 'ai');
+    return aiData;
+  }
+
+  console.log('[quiz] Falling back to template generator');
+  const templateData = await generateTemplateQuizData();
+  writeCache(fingerprint, templateData, 'template');
+  return templateData;
 }

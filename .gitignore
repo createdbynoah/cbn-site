@@ -15,5 +15,8 @@ out/
 *~
 .cache/
 
+# quiz cache
+.quiz-cache.json
+
 # ts config
 tsconfig.tsbuildinfo
