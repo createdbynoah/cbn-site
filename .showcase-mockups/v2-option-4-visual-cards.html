@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option 4: Visual Cards — Colorful Thumbnails</title>
+<style>
+  :root {
+    --bg: #0b0a08;
+    --text: rgba(255, 255, 255, 0.92);
+    --muted: rgba(255, 255, 255, 0.68);
+    --faint: rgba(255, 255, 255, 0.52);
+    --accent: #ffb454;
+    --accent2: #ff6b4a;
+    --line: rgba(255, 255, 255, 0.1);
+    --max: 980px;
+    --pad: clamp(18px, 4vw, 44px);
+    --h1: clamp(44px, 7vw, 82px);
+    --p: clamp(16px, 1.8vw, 18px);
+    --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--bg); }
+  body {
+    font-family: var(--sans);
+    color: var(--text);
+    min-height: 100vh;
+    position: relative;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(900px 540px at 12% 10%, rgba(255, 180, 84, 0.16), transparent 60%),
+      radial-gradient(900px 520px at 88% 25%, rgba(255, 107, 74, 0.12), transparent 62%),
+      radial-gradient(700px 520px at 50% 110%, rgba(255, 180, 84, 0.1), transparent 55%),
+      var(--bg);
+    z-index: -1;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  .wrap {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: var(--pad);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: clamp(18px, 4vw, 32px);
+    padding: clamp(12px, 2.5vw, 22px) 0;
+  }
+
+  .kicker {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--faint);
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .kicker::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    box-shadow: 0 0 20px rgba(255, 180, 84, 0.22);
+    flex: 0 0 auto;
+  }
+
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  h1 {
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+  }
+  .sub {
+    font-size: var(--p);
+    line-height: 1.55;
+    color: var(--muted);
+    margin-top: 12px;
+  }
+
+  .count-block {
+    text-align: right;
+  }
+  .count-num {
+    font-family: var(--mono);
+    font-size: 36px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.08);
+    line-height: 1;
+  }
+  .count-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.25);
+    margin-top: 2px;
+  }
+
+  .section-heading {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--faint);
+    margin: 0 0 12px 0;
+    font-weight: 500;
+  }
+
+  .tag-pill {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    background: rgba(255, 180, 84, 0.1);
+    border: 1px solid rgba(255, 180, 84, 0.2);
+    border-radius: 999px;
+    padding: 3px 10px;
+  }
+
+  /* ─── VISUAL CARD GRID ─── */
+  .showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 640px) {
+    .showcase-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 380px) {
+    .showcase-grid { grid-template-columns: 1fr; }
+  }
+
+  .vcard {
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+    overflow: hidden;
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      background 0.35s ease,
+      border-color 0.35s ease,
+      box-shadow 0.35s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .vcard:hover {
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+
+  .vcard-visual {
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--sans);
+    font-size: 48px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    position: relative;
+  }
+  /* Unique tinted gradient per card */
+  .vcard:nth-child(1) .vcard-visual { background: linear-gradient(150deg, #1a1510, #241c10); }
+  .vcard:nth-child(2) .vcard-visual { background: linear-gradient(150deg, #14101a, #1c1224); }
+  .vcard:nth-child(3) .vcard-visual { background: linear-gradient(150deg, #0f1418, #101e28); }
+  .vcard:nth-child(4) .vcard-visual { background: linear-gradient(150deg, #10160f, #142010); }
+  .vcard:nth-child(5) .vcard-visual { background: linear-gradient(150deg, #17140f, #221c10); }
+  .vcard:nth-child(6) .vcard-visual { background: linear-gradient(150deg, #140f16, #1e1024); }
+
+  .vcard-num {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.12);
+  }
+
+  .vcard-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .vcard-name {
+    font-weight: 650;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  .vcard-hint {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--faint);
+    line-height: 1.4;
+  }
+  .vcard-footer {
+    padding: 0 16px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .vcard-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .vcard-go {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .vcard:hover .vcard-go {
+    opacity: 1;
+  }
+
+  /* Stagger */
+  .vcard {
+    opacity: 0;
+    transform: scale(0.95);
+    animation: revealIn 0.6s ease forwards;
+  }
+  .vcard:nth-child(1) { animation-delay: 0ms; }
+  .vcard:nth-child(2) { animation-delay: 120ms; }
+  .vcard:nth-child(3) { animation-delay: 240ms; }
+  .vcard:nth-child(4) { animation-delay: 360ms; }
+  .vcard:nth-child(5) { animation-delay: 480ms; }
+  .vcard:nth-child(6) { animation-delay: 600ms; }
+
+  @keyframes revealIn {
+    to { opacity: 1; transform: scale(1); }
+  }
+  .fade {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeIn 0.9s ease forwards;
+  }
+  .fade-2 { animation-delay: 150ms; }
+
+  @keyframes fadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <main class="fade fade-2">
+    <div>
+      <div class="kicker">showcase</div>
+      <div class="header-row">
+        <div>
+          <h1>Showcase</h1>
+          <p class="sub">Micro-SaaS apps and tools I&rsquo;ve designed, built, and shipped.</p>
+        </div>
+        <div class="count-block">
+          <div class="count-num">06</div>
+          <div class="count-label">projects</div>
+        </div>
+      </div>
+    </div>
+
+    <section style="display: flex; flex-direction: column; gap: 12px;">
+      <h2 class="section-heading">All Projects</h2>
+      <div class="showcase-grid">
+
+        <a class="vcard" href="#" target="_blank" rel="noreferrer">
+          <div class="vcard-visual">B<span class="vcard-num">01</span></div>
+          <div class="vcard-body">
+            <div class="vcard-name">Binit</div>
+            <div class="vcard-hint">AI-powered waste tracking app</div>
+          </div>
+          <div class="vcard-footer">
+            <div class="vcard-tags"><span class="tag-pill">React Native</span><span class="tag-pill">Expo</span></div>
+            <span class="vcard-go">view &rarr;</span>
+          </div>
+        </a>
+
+        <a class="vcard" href="#" target="_blank" rel="noreferrer">
+          <div class="vcard-visual">E<span class="vcard-num">02</span></div>
+          <div class="vcard-body">
+            <div class="vcard-name">Expense Planner</div>
+            <div class="vcard-hint">Smart budgeting &amp; tracking</div>
+          </div>
+          <div class="vcard-footer">
+            <div class="vcard-tags"><span class="tag-pill">Next.js</span><span class="tag-pill">Supabase</span></div>
+            <span class="vcard-go">view &rarr;</span>
+          </div>
+        </a>
+
+        <a class="vcard" href="#" target="_blank" rel="noreferrer">
+          <div class="vcard-visual">F<span class="vcard-num">03</span></div>
+          <div class="vcard-body">
+            <div class="vcard-name">Fitness Wiki</div>
+            <div class="vcard-hint">Comprehensive fitness knowledge base</div>
+          </div>
+          <div class="vcard-footer">
+            <div class="vcard-tags"><span class="tag-pill">Astro</span><span class="tag-pill">MDX</span></div>
+            <span class="vcard-go">view &rarr;</span>
+          </div>
+        </a>
+
+        <a class="vcard" href="#" target="_blank" rel="noreferrer">
+          <div class="vcard-visual">T<span class="vcard-num">04</span></div>
+          <div class="vcard-body">
+            <div class="vcard-name">TaskFlow</div>
+            <div class="vcard-hint">Minimal project management tool</div>
+          </div>
+          <div class="vcard-footer">
+            <div class="vcard-tags"><span class="tag-pill">React</span><span class="tag-pill">Firebase</span></div>
+            <span class="vcard-go">view &rarr;</span>
+          </div>
+        </a>
+
+        <a class="vcard" href="#" target="_blank" rel="noreferrer">
+          <div class="vcard-visual">S<span class="vcard-num">05</span></div>
+          <div class="vcard-body">
+            <div class="vcard-name">SnapNote</div>
+            <div class="vcard-hint">Quick capture notes &amp; snippets</div>
+          </div>
+          <div class="vcard-footer">
+            <div class="vcard-tags"><span class="tag-pill">Svelte</span></div>
+            <span class="vcard-go">view &rarr;</span>
+          </div>
+        </a>
+
+        <a class="vcard" href="#" target="_blank" rel="noreferrer">
+          <div class="vcard-visual">M<span class="vcard-num">06</span></div>
+          <div class="vcard-body">
+            <div class="vcard-name">Metrix</div>
+            <div class="vcard-hint">Analytics for indie makers</div>
+          </div>
+          <div class="vcard-footer">
+            <div class="vcard-tags"><span class="tag-pill">Vue</span><span class="tag-pill">D3</span></div>
+            <span class="vcard-go">view &rarr;</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

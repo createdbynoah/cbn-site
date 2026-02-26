@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option 2: Bento Grid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Geist+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0b0a08;
+    color: rgba(255,255,255,0.92);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: clamp(24px, 5vw, 60px) clamp(18px, 4vw, 44px);
+  }
+
+  /* Header */
+  .header {
+    margin-bottom: clamp(40px, 6vw, 64px);
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards;
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #ffb454;
+    background: rgba(255,180,84,0.08);
+    border: 1px solid rgba(255,180,84,0.15);
+    border-radius: 999px;
+    padding: 5px 14px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(44px, 7vw, 80px);
+    font-weight: 400;
+    line-height: 1.0;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: #ffb454;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.6;
+    max-width: 400px;
+  }
+
+  /* Bento Grid */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: minmax(180px, auto);
+    gap: 12px;
+  }
+
+  .bento-card {
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.03);
+  }
+
+  .bento-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+  }
+
+  /* Sizes */
+  .bento-card.large {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .bento-card.wide {
+    grid-column: span 2;
+  }
+
+  .bento-card.tall {
+    grid-row: span 2;
+  }
+
+  /* Card colors */
+  .bento-card:nth-child(1) { background: linear-gradient(145deg, rgba(255,180,84,0.12) 0%, rgba(255,180,84,0.03) 100%); }
+  .bento-card:nth-child(2) { background: linear-gradient(145deg, rgba(255,107,74,0.10) 0%, rgba(255,107,74,0.02) 100%); }
+  .bento-card:nth-child(3) { background: linear-gradient(145deg, rgba(120,200,255,0.08) 0%, rgba(120,200,255,0.02) 100%); }
+  .bento-card:nth-child(4) { background: linear-gradient(145deg, rgba(180,255,150,0.08) 0%, rgba(180,255,150,0.02) 100%); }
+  .bento-card:nth-child(5) { background: linear-gradient(145deg, rgba(200,150,255,0.08) 0%, rgba(200,150,255,0.02) 100%); }
+  .bento-card:nth-child(6) { background: linear-gradient(145deg, rgba(255,200,150,0.08) 0%, rgba(255,200,150,0.02) 100%); }
+
+  .card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    color: #ffb454;
+    margin-bottom: 16px;
+  }
+
+  .large .card-icon {
+    width: 64px;
+    height: 64px;
+    font-size: 28px;
+    border-radius: 16px;
+  }
+
+  .card-top {
+    flex: 1;
+  }
+
+  .card-bottom {
+    margin-top: auto;
+  }
+
+  .card-name {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .large .card-name {
+    font-size: 22px;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.5;
+  }
+
+  .large .card-desc {
+    font-size: 14px;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .card-tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.35);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 999px;
+    padding: 3px 10px;
+  }
+
+  .card-link {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #ffb454;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+
+  .bento-card:hover .card-link {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    .bento {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .bento-card.large { grid-column: span 2; grid-row: span 1; }
+    .bento-card.tall { grid-row: span 1; }
+  }
+
+  @media (max-width: 480px) {
+    .bento { grid-template-columns: 1fr; }
+    .bento-card.large, .bento-card.wide { grid-column: span 1; }
+  }
+
+  /* Stagger */
+  .bento-card { opacity: 0; animation: cardIn 0.5s ease forwards; }
+  .bento-card:nth-child(1) { animation-delay: 0.1s; }
+  .bento-card:nth-child(2) { animation-delay: 0.17s; }
+  .bento-card:nth-child(3) { animation-delay: 0.24s; }
+  .bento-card:nth-child(4) { animation-delay: 0.31s; }
+  .bento-card:nth-child(5) { animation-delay: 0.38s; }
+  .bento-card:nth-child(6) { animation-delay: 0.45s; }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="tag">Portfolio</div>
+    <h1>What I've <em>shipped</em></h1>
+    <p class="subtitle">Micro-SaaS products, side projects, and tools — designed, built, and deployed.</p>
+  </div>
+
+  <div class="bento">
+    <!-- Large featured card -->
+    <div class="bento-card large">
+      <div class="card-top">
+        <div class="card-icon">B</div>
+      </div>
+      <div class="card-bottom">
+        <div class="card-name">Binit</div>
+        <div class="card-desc">AI-powered waste tracking mobile app that helps users make sustainable choices through smart categorization.</div>
+        <div class="card-tags">
+          <span class="card-tag">React Native</span>
+          <span class="card-tag">Expo</span>
+          <span class="card-tag">TypeScript</span>
+        </div>
+        <a class="card-link" href="#">Visit project &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Regular cards -->
+    <div class="bento-card">
+      <div class="card-top"><div class="card-icon">E</div></div>
+      <div class="card-bottom">
+        <div class="card-name">Expense Planner</div>
+        <div class="card-desc">Smart budgeting and tracking</div>
+        <a class="card-link" href="#">Visit &rarr;</a>
+      </div>
+    </div>
+
+    <div class="bento-card">
+      <div class="card-top"><div class="card-icon">F</div></div>
+      <div class="card-bottom">
+        <div class="card-name">Fitness Wiki</div>
+        <div class="card-desc">Fitness knowledge base</div>
+        <a class="card-link" href="#">Visit &rarr;</a>
+      </div>
+    </div>
+
+    <div class="bento-card wide">
+      <div class="card-top"><div class="card-icon">T</div></div>
+      <div class="card-bottom">
+        <div class="card-name">TaskFlow</div>
+        <div class="card-desc">Lightweight project management for solo makers and small teams</div>
+        <div class="card-tags">
+          <span class="card-tag">Next.js</span>
+          <span class="card-tag">Supabase</span>
+        </div>
+        <a class="card-link" href="#">Visit project &rarr;</a>
+      </div>
+    </div>
+
+    <div class="bento-card">
+      <div class="card-top"><div class="card-icon">S</div></div>
+      <div class="card-bottom">
+        <div class="card-name">SnapNote</div>
+        <div class="card-desc">Quick capture tool</div>
+        <a class="card-link" href="#">Visit &rarr;</a>
+      </div>
+    </div>
+
+    <div class="bento-card">
+      <div class="card-top"><div class="card-icon">M</div></div>
+      <div class="card-bottom">
+        <div class="card-name">Metrix</div>
+        <div class="card-desc">Indie maker analytics</div>
+        <a class="card-link" href="#">Visit &rarr;</a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option 5: Catalog — Row List</title>
+<style>
+  :root {
+    --bg: #0b0a08;
+    --text: rgba(255, 255, 255, 0.92);
+    --muted: rgba(255, 255, 255, 0.68);
+    --faint: rgba(255, 255, 255, 0.52);
+    --accent: #ffb454;
+    --accent2: #ff6b4a;
+    --line: rgba(255, 255, 255, 0.1);
+    --max: 980px;
+    --pad: clamp(18px, 4vw, 44px);
+    --h1: clamp(44px, 7vw, 82px);
+    --p: clamp(16px, 1.8vw, 18px);
+    --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--bg); }
+  body {
+    font-family: var(--sans);
+    color: var(--text);
+    min-height: 100vh;
+    position: relative;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(900px 540px at 12% 10%, rgba(255, 180, 84, 0.16), transparent 60%),
+      radial-gradient(900px 520px at 88% 25%, rgba(255, 107, 74, 0.12), transparent 62%),
+      radial-gradient(700px 520px at 50% 110%, rgba(255, 180, 84, 0.1), transparent 55%),
+      var(--bg);
+    z-index: -1;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  .wrap {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: var(--pad);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: clamp(18px, 4vw, 32px);
+    padding: clamp(12px, 2.5vw, 22px) 0;
+  }
+
+  .kicker {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--faint);
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .kicker::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    box-shadow: 0 0 20px rgba(255, 180, 84, 0.22);
+    flex: 0 0 auto;
+  }
+
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  h1 {
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+  }
+  .sub {
+    font-size: var(--p);
+    line-height: 1.55;
+    color: var(--muted);
+    margin-top: 12px;
+  }
+
+  .stat-block {
+    display: flex;
+    gap: 24px;
+    text-align: right;
+  }
+  .stat-num {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.25);
+    margin-top: 2px;
+  }
+
+  .section-heading {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--faint);
+    margin: 0 0 4px 0;
+    font-weight: 500;
+  }
+
+  .tag-pill {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    background: rgba(255, 180, 84, 0.1);
+    border: 1px solid rgba(255, 180, 84, 0.2);
+    border-radius: 999px;
+    padding: 3px 10px;
+  }
+
+  /* ─── TABLE HEADER ─── */
+  .table-header {
+    display: grid;
+    grid-template-columns: 52px 1.4fr 2fr 1fr 44px;
+    gap: 16px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.2);
+  }
+  @media (max-width: 700px) {
+    .table-header { display: none; }
+  }
+
+  /* ─── ROW CARDS ─── */
+  .row {
+    display: grid;
+    grid-template-columns: 52px 1.4fr 2fr 1fr 44px;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .row:hover {
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  @media (max-width: 700px) {
+    .row {
+      grid-template-columns: 44px 1fr;
+      gap: 10px;
+      padding: 14px 0;
+    }
+    .row-desc, .row-stack, .row-go { display: none; }
+  }
+
+  .row-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .row:hover .row-icon {
+    border-color: rgba(255, 180, 84, 0.2);
+    transform: scale(1.05);
+  }
+  /* Use accent-tinted backgrounds */
+  .row:nth-child(1) .row-icon { background: rgba(255, 180, 84, 0.08); color: var(--accent); }
+  .row:nth-child(2) .row-icon { background: rgba(255, 107, 74, 0.08); color: var(--accent2); }
+  .row:nth-child(3) .row-icon { background: rgba(120, 200, 255, 0.08); color: #78c8ff; }
+  .row:nth-child(4) .row-icon { background: rgba(160, 230, 140, 0.08); color: #a0e68c; }
+  .row:nth-child(5) .row-icon { background: rgba(200, 160, 255, 0.08); color: #c8a0ff; }
+  .row:nth-child(6) .row-icon { background: rgba(255, 210, 120, 0.08); color: #ffd278; }
+
+  .row-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .row-name {
+    font-weight: 650;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  .row-status {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.3);
+  }
+  .row-status .live {
+    color: #4ade80;
+  }
+
+  .row-desc {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--faint);
+    line-height: 1.4;
+  }
+
+  .row-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .row-go {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.3s, transform 0.3s;
+    text-align: center;
+  }
+  .row:hover .row-go {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Stagger */
+  .row {
+    opacity: 0;
+    animation: rowIn 0.5s ease forwards;
+  }
+  .row:nth-child(1) { animation-delay: 0ms; }
+  .row:nth-child(2) { animation-delay: 100ms; }
+  .row:nth-child(3) { animation-delay: 200ms; }
+  .row:nth-child(4) { animation-delay: 300ms; }
+  .row:nth-child(5) { animation-delay: 400ms; }
+  .row:nth-child(6) { animation-delay: 500ms; }
+
+  @keyframes rowIn {
+    from { opacity: 0; transform: translateX(-6px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .fade {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeIn 0.9s ease forwards;
+  }
+  .fade-2 { animation-delay: 150ms; }
+
+  @keyframes fadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <main class="fade fade-2">
+    <div>
+      <div class="kicker">showcase</div>
+      <div class="header-row">
+        <div>
+          <h1>Showcase</h1>
+          <p class="sub">Micro-SaaS apps and tools I&rsquo;ve designed, built, and shipped.</p>
+        </div>
+        <div class="stat-block">
+          <div>
+            <div class="stat-num">6</div>
+            <div class="stat-label">Projects</div>
+          </div>
+          <div>
+            <div class="stat-num">5</div>
+            <div class="stat-label">Live</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section>
+      <div class="table-header">
+        <span></span>
+        <span>Project</span>
+        <span>Description</span>
+        <span>Stack</span>
+        <span></span>
+      </div>
+
+      <a class="row" href="#" target="_blank" rel="noreferrer">
+        <div class="row-icon">B</div>
+        <div class="row-info">
+          <div class="row-name">Binit</div>
+          <div class="row-status"><span class="live">&#9679;</span> Live</div>
+        </div>
+        <div class="row-desc">AI-powered waste tracking mobile app</div>
+        <div class="row-stack"><span class="tag-pill">React Native</span><span class="tag-pill">Expo</span></div>
+        <div class="row-go">&rarr;</div>
+      </a>
+
+      <a class="row" href="#" target="_blank" rel="noreferrer">
+        <div class="row-icon">E</div>
+        <div class="row-info">
+          <div class="row-name">Expense Planner</div>
+          <div class="row-status"><span class="live">&#9679;</span> Live</div>
+        </div>
+        <div class="row-desc">Smart budgeting and expense tracking</div>
+        <div class="row-stack"><span class="tag-pill">Next.js</span><span class="tag-pill">Supabase</span></div>
+        <div class="row-go">&rarr;</div>
+      </a>
+
+      <a class="row" href="#" target="_blank" rel="noreferrer">
+        <div class="row-icon">F</div>
+        <div class="row-info">
+          <div class="row-name">Fitness Wiki</div>
+          <div class="row-status"><span class="live">&#9679;</span> Live</div>
+        </div>
+        <div class="row-desc">Comprehensive fitness knowledge base</div>
+        <div class="row-stack"><span class="tag-pill">Astro</span><span class="tag-pill">MDX</span></div>
+        <div class="row-go">&rarr;</div>
+      </a>
+
+      <a class="row" href="#" target="_blank" rel="noreferrer">
+        <div class="row-icon">T</div>
+        <div class="row-info">
+          <div class="row-name">TaskFlow</div>
+          <div class="row-status"><span class="live">&#9679;</span> Live</div>
+        </div>
+        <div class="row-desc">Minimal project management tool</div>
+        <div class="row-stack"><span class="tag-pill">React</span><span class="tag-pill">Firebase</span></div>
+        <div class="row-go">&rarr;</div>
+      </a>
+
+      <a class="row" href="#" target="_blank" rel="noreferrer">
+        <div class="row-icon">S</div>
+        <div class="row-info">
+          <div class="row-name">SnapNote</div>
+          <div class="row-status"><span class="live">&#9679;</span> Live</div>
+        </div>
+        <div class="row-desc">Quick capture notes and snippets</div>
+        <div class="row-stack"><span class="tag-pill">Svelte</span></div>
+        <div class="row-go">&rarr;</div>
+      </a>
+
+      <a class="row" href="#" target="_blank" rel="noreferrer">
+        <div class="row-icon">M</div>
+        <div class="row-info">
+          <div class="row-name">Metrix</div>
+          <div class="row-status">Beta</div>
+        </div>
+        <div class="row-desc">Analytics dashboard for indie makers</div>
+        <div class="row-stack"><span class="tag-pill">Vue</span><span class="tag-pill">D3</span></div>
+        <div class="row-go">&rarr;</div>
+      </a>
+    </section>
+  </main>
+</div>
+</body>
+</html>

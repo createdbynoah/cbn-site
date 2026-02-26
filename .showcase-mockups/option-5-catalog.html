@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option 5: Dense Catalog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0b0a08;
+    color: rgba(255,255,255,0.92);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: clamp(24px, 5vw, 60px) clamp(18px, 4vw, 44px);
+  }
+
+  /* Header */
+  .header {
+    margin-bottom: clamp(32px, 5vw, 52px);
+    opacity: 0;
+    animation: fadeIn 0.7s ease forwards;
+  }
+
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+  }
+
+  h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+  }
+
+  .stat-block {
+    text-align: right;
+    display: flex;
+    gap: 32px;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .stat-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffb454;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.3);
+    margin-top: 4px;
+  }
+
+  .divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+  }
+
+  /* Table header */
+  .table-header {
+    display: grid;
+    grid-template-columns: 72px 1.5fr 2fr 1fr 48px;
+    gap: 16px;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.25);
+    opacity: 0;
+    animation: fadeIn 0.5s ease 0.2s forwards;
+  }
+
+  @media (max-width: 700px) {
+    .table-header { display: none; }
+  }
+
+  /* Card row */
+  .row {
+    display: grid;
+    grid-template-columns: 72px 1.5fr 2fr 1fr 48px;
+    gap: 16px;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    cursor: pointer;
+    transition: background 0.3s, border-color 0.3s;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .row:hover {
+    background: rgba(255,255,255,0.02);
+    border-bottom-color: rgba(255,180,84,0.15);
+  }
+
+  @media (max-width: 700px) {
+    .row {
+      grid-template-columns: 56px 1fr;
+      gap: 12px;
+      padding: 16px 0;
+    }
+    .row-desc, .row-stack, .row-arrow { display: none; }
+    .row-info { grid-column: 2; }
+  }
+
+  .row-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .row:hover .row-icon {
+    border-color: rgba(255,180,84,0.2);
+    transform: scale(1.05);
+  }
+
+  .row:nth-child(1) .row-icon { background: rgba(255,180,84,0.08); color: #ffb454; }
+  .row:nth-child(2) .row-icon { background: rgba(255,107,74,0.08); color: #ff6b4a; }
+  .row:nth-child(3) .row-icon { background: rgba(120,200,255,0.08); color: #78c8ff; }
+  .row:nth-child(4) .row-icon { background: rgba(180,255,150,0.08); color: #b4ff96; }
+  .row:nth-child(5) .row-icon { background: rgba(200,150,255,0.08); color: #c896ff; }
+  .row:nth-child(6) .row-icon { background: rgba(255,220,120,0.08); color: #ffdc78; }
+
+  .row-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .row-name {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .row-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .row-status .live {
+    color: #4ade80;
+  }
+
+  .row-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.5;
+  }
+
+  .row-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .row-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 6px;
+    padding: 3px 8px;
+  }
+
+  .row-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+
+  .row:hover .row-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .row-arrow svg {
+    width: 16px;
+    height: 16px;
+    stroke: #ffb454;
+  }
+
+  /* Animations */
+  .row { opacity: 0; animation: rowIn 0.4s ease forwards; }
+  .row:nth-child(1) { animation-delay: 0.25s; }
+  .row:nth-child(2) { animation-delay: 0.32s; }
+  .row:nth-child(3) { animation-delay: 0.39s; }
+  .row:nth-child(4) { animation-delay: 0.46s; }
+  .row:nth-child(5) { animation-delay: 0.53s; }
+  .row:nth-child(6) { animation-delay: 0.60s; }
+
+  @keyframes rowIn {
+    from { opacity: 0; transform: translateX(-8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="header-row">
+      <h1>Showcase</h1>
+      <div class="stat-block">
+        <div class="stat">
+          <div class="stat-num">6</div>
+          <div class="stat-label">Projects</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">5</div>
+          <div class="stat-label">Live</div>
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+  </div>
+
+  <div class="table-header">
+    <span></span>
+    <span>Project</span>
+    <span>Description</span>
+    <span>Stack</span>
+    <span></span>
+  </div>
+
+  <a class="row" href="#">
+    <div class="row-icon">B</div>
+    <div class="row-info">
+      <div class="row-name">Binit</div>
+      <div class="row-status"><span class="live">&#9679;</span> Live</div>
+    </div>
+    <div class="row-desc">AI-powered waste tracking mobile app</div>
+    <div class="row-stack"><span class="row-tag">React Native</span><span class="row-tag">Expo</span></div>
+    <div class="row-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+  </a>
+
+  <a class="row" href="#">
+    <div class="row-icon">E</div>
+    <div class="row-info">
+      <div class="row-name">Expense Planner</div>
+      <div class="row-status"><span class="live">&#9679;</span> Live</div>
+    </div>
+    <div class="row-desc">Smart budgeting and expense tracking</div>
+    <div class="row-stack"><span class="row-tag">Next.js</span><span class="row-tag">Supabase</span></div>
+    <div class="row-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+  </a>
+
+  <a class="row" href="#">
+    <div class="row-icon">F</div>
+    <div class="row-info">
+      <div class="row-name">Fitness Wiki</div>
+      <div class="row-status"><span class="live">&#9679;</span> Live</div>
+    </div>
+    <div class="row-desc">Comprehensive fitness knowledge base</div>
+    <div class="row-stack"><span class="row-tag">Astro</span><span class="row-tag">MDX</span></div>
+    <div class="row-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+  </a>
+
+  <a class="row" href="#">
+    <div class="row-icon">T</div>
+    <div class="row-info">
+      <div class="row-name">TaskFlow</div>
+      <div class="row-status"><span class="live">&#9679;</span> Live</div>
+    </div>
+    <div class="row-desc">Minimal project management tool</div>
+    <div class="row-stack"><span class="row-tag">React</span><span class="row-tag">Firebase</span></div>
+    <div class="row-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+  </a>
+
+  <a class="row" href="#">
+    <div class="row-icon">S</div>
+    <div class="row-info">
+      <div class="row-name">SnapNote</div>
+      <div class="row-status"><span class="live">&#9679;</span> Live</div>
+    </div>
+    <div class="row-desc">Quick capture notes and snippets</div>
+    <div class="row-stack"><span class="row-tag">Svelte</span></div>
+    <div class="row-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+  </a>
+
+  <a class="row" href="#">
+    <div class="row-icon">M</div>
+    <div class="row-info">
+      <div class="row-name">Metrix</div>
+      <div class="row-status">Beta</div>
+    </div>
+    <div class="row-desc">Analytics dashboard for indie makers</div>
+    <div class="row-stack"><span class="row-tag">Vue</span><span class="row-tag">D3</span></div>
+    <div class="row-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+  </a>
+</div>
+</body>
+</html>

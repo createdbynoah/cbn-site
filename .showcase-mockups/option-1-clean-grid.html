@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option 1: Clean Grid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0b0a08;
+    color: rgba(255,255,255,0.92);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: clamp(24px, 5vw, 60px) clamp(18px, 4vw, 44px);
+  }
+
+  /* Header */
+  .header {
+    margin-bottom: clamp(48px, 8vw, 80px);
+  }
+
+  .kicker {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .kicker::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ffb454;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    margin-bottom: 16px;
+  }
+
+  h1 span {
+    color: #ffb454;
+  }
+
+  .subtitle {
+    font-size: clamp(15px, 1.8vw, 18px);
+    color: rgba(255,255,255,0.5);
+    max-width: 480px;
+    line-height: 1.6;
+  }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  @media (max-width: 768px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  /* Card */
+  .card {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s;
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255,180,84,0.25);
+  }
+
+  .card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.85;
+    transition: opacity 0.4s, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .card:hover .card-image {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  /* Placeholder visual for mockup */
+  .card-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    color: rgba(255,255,255,0.08);
+    background: linear-gradient(135deg, rgba(255,180,84,0.06) 0%, rgba(255,107,74,0.04) 100%);
+  }
+
+  .card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(11,10,8,0.95) 0%, rgba(11,10,8,0.3) 40%, transparent 60%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+
+  .card:hover .card-overlay {
+    opacity: 1;
+  }
+
+  .card-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-arrow {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255,180,84,0.15);
+    border: 1px solid rgba(255,180,84,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translate(-4px, 4px);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+
+  .card:hover .card-arrow {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+
+  .card-arrow svg {
+    width: 14px;
+    height: 14px;
+    stroke: #ffb454;
+  }
+
+  /* Stagger animations */
+  .card { opacity: 0; animation: cardIn 0.6s ease forwards; }
+  .card:nth-child(1) { animation-delay: 0.1s; }
+  .card:nth-child(2) { animation-delay: 0.18s; }
+  .card:nth-child(3) { animation-delay: 0.26s; }
+  .card:nth-child(4) { animation-delay: 0.34s; }
+  .card:nth-child(5) { animation-delay: 0.42s; }
+  .card:nth-child(6) { animation-delay: 0.50s; }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .header { opacity: 0; animation: fadeIn 0.7s ease 0s forwards; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="kicker">Showcase</div>
+    <h1>Things I've <span>built.</span></h1>
+    <p class="subtitle">A collection of micro-SaaS apps, side projects, and experiments — each one shipped and live.</p>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-placeholder">B</div>
+      <div class="card-overlay">
+        <div class="card-name">Binit</div>
+        <div class="card-desc">AI-powered waste tracking mobile app</div>
+      </div>
+      <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+    </div>
+
+    <div class="card">
+      <div class="card-placeholder">E</div>
+      <div class="card-overlay">
+        <div class="card-name">Expense Planner</div>
+        <div class="card-desc">Smart budgeting and expense tracking</div>
+      </div>
+      <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+    </div>
+
+    <div class="card">
+      <div class="card-placeholder">F</div>
+      <div class="card-overlay">
+        <div class="card-name">Fitness Wiki</div>
+        <div class="card-desc">Comprehensive fitness knowledge base</div>
+      </div>
+      <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+    </div>
+
+    <div class="card">
+      <div class="card-placeholder">T</div>
+      <div class="card-overlay">
+        <div class="card-name">TaskFlow</div>
+        <div class="card-desc">Minimal project management tool</div>
+      </div>
+      <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+    </div>
+
+    <div class="card">
+      <div class="card-placeholder">S</div>
+      <div class="card-overlay">
+        <div class="card-name">SnapNote</div>
+        <div class="card-desc">Quick capture notes and snippets</div>
+      </div>
+      <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+    </div>
+
+    <div class="card">
+      <div class="card-placeholder">M</div>
+      <div class="card-overlay">
+        <div class="card-name">Metrix</div>
+        <div class="card-desc">Analytics dashboard for indie makers</div>
+      </div>
+      <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

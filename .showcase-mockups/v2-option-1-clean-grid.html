@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option 1: Clean Grid — Image-Forward</title>
+<style>
+  /* ─── Exact site design system ─── */
+  :root {
+    --bg: #0b0a08;
+    --text: rgba(255, 255, 255, 0.92);
+    --muted: rgba(255, 255, 255, 0.68);
+    --faint: rgba(255, 255, 255, 0.52);
+    --accent: #ffb454;
+    --accent2: #ff6b4a;
+    --line: rgba(255, 255, 255, 0.1);
+    --max: 980px;
+    --pad: clamp(18px, 4vw, 44px);
+    --h1: clamp(44px, 7vw, 82px);
+    --p: clamp(16px, 1.8vw, 18px);
+    --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--bg); }
+  body {
+    font-family: var(--sans);
+    color: var(--text);
+    min-height: 100vh;
+    position: relative;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(900px 540px at 12% 10%, rgba(255, 180, 84, 0.16), transparent 60%),
+      radial-gradient(900px 520px at 88% 25%, rgba(255, 107, 74, 0.12), transparent 62%),
+      radial-gradient(700px 520px at 50% 110%, rgba(255, 180, 84, 0.1), transparent 55%),
+      var(--bg);
+    z-index: -1;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  .wrap {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: var(--pad);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: clamp(18px, 4vw, 32px);
+    padding: clamp(12px, 2.5vw, 22px) 0;
+  }
+
+  /* Kicker */
+  .kicker {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--faint);
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .kicker::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    box-shadow: 0 0 20px rgba(255, 180, 84, 0.22);
+    flex: 0 0 auto;
+  }
+
+  h1 {
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    margin-bottom: 12px;
+  }
+  .sub {
+    font-size: var(--p);
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  .section-heading {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--faint);
+    margin: 0 0 12px 0;
+    font-weight: 500;
+  }
+
+  /* ─── THIS OPTION: 3-column image grid ─── */
+  .showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 640px) {
+    .showcase-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 380px) {
+    .showcase-grid { grid-template-columns: 1fr; }
+  }
+
+  .showcase-card {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      background 0.35s ease,
+      border-color 0.35s ease,
+      box-shadow 0.35s ease;
+  }
+  .showcase-card:hover {
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+
+  /* Placeholder image area (replace with real screenshots) */
+  .showcase-card-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(255, 180, 84, 0.06), rgba(255, 107, 74, 0.03));
+    font-family: var(--sans);
+    font-size: 40px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.06);
+  }
+
+  /* Overlay on hover */
+  .showcase-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(11, 10, 8, 0.92) 0%, rgba(11, 10, 8, 0.4) 45%, transparent 65%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 16px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .showcase-card:hover .showcase-card-overlay {
+    opacity: 1;
+  }
+
+  .showcase-card-name {
+    font-weight: 650;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2px;
+  }
+  .showcase-card-hint {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--faint);
+    line-height: 1.4;
+  }
+  .showcase-card-go {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    opacity: 0;
+    transform: translate(-4px, 4px);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .showcase-card:hover .showcase-card-go {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+
+  /* Scroll reveal stagger */
+  .showcase-card {
+    opacity: 0;
+    transform: scale(0.95);
+    animation: revealIn 0.6s ease forwards;
+  }
+  .showcase-card:nth-child(1) { animation-delay: 0ms; }
+  .showcase-card:nth-child(2) { animation-delay: 120ms; }
+  .showcase-card:nth-child(3) { animation-delay: 240ms; }
+  .showcase-card:nth-child(4) { animation-delay: 360ms; }
+  .showcase-card:nth-child(5) { animation-delay: 480ms; }
+  .showcase-card:nth-child(6) { animation-delay: 600ms; }
+
+  @keyframes revealIn {
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Fade entrance */
+  .fade {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeIn 0.9s ease forwards;
+  }
+  .fade-2 { animation-delay: 150ms; }
+
+  @keyframes fadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <main class="fade fade-2">
+    <div>
+      <div class="kicker">showcase</div>
+      <h1>Showcase</h1>
+      <p class="sub">Micro-SaaS apps and tools I&rsquo;ve designed, built, and shipped.</p>
+    </div>
+
+    <section>
+      <h2 class="section-heading">All Projects</h2>
+      <div class="showcase-grid">
+
+        <a class="showcase-card" href="#" target="_blank" rel="noreferrer">
+          <div class="showcase-card-image">B</div>
+          <div class="showcase-card-overlay">
+            <div class="showcase-card-name">Binit</div>
+            <div class="showcase-card-hint">AI-powered waste tracking app</div>
+          </div>
+          <span class="showcase-card-go">view &rarr;</span>
+        </a>
+
+        <a class="showcase-card" href="#" target="_blank" rel="noreferrer">
+          <div class="showcase-card-image">E</div>
+          <div class="showcase-card-overlay">
+            <div class="showcase-card-name">Expense Planner</div>
+            <div class="showcase-card-hint">Smart budgeting &amp; tracking</div>
+          </div>
+          <span class="showcase-card-go">view &rarr;</span>
+        </a>
+
+        <a class="showcase-card" href="#" target="_blank" rel="noreferrer">
+          <div class="showcase-card-image">F</div>
+          <div class="showcase-card-overlay">
+            <div class="showcase-card-name">Fitness Wiki</div>
+            <div class="showcase-card-hint">Comprehensive fitness knowledge base</div>
+          </div>
+          <span class="showcase-card-go">view &rarr;</span>
+        </a>
+
+        <a class="showcase-card" href="#" target="_blank" rel="noreferrer">
+          <div class="showcase-card-image">T</div>
+          <div class="showcase-card-overlay">
+            <div class="showcase-card-name">TaskFlow</div>
+            <div class="showcase-card-hint">Minimal project management tool</div>
+          </div>
+          <span class="showcase-card-go">view &rarr;</span>
+        </a>
+
+        <a class="showcase-card" href="#" target="_blank" rel="noreferrer">
+          <div class="showcase-card-image">S</div>
+          <div class="showcase-card-overlay">
+            <div class="showcase-card-name">SnapNote</div>
+            <div class="showcase-card-hint">Quick capture notes &amp; snippets</div>
+          </div>
+          <span class="showcase-card-go">view &rarr;</span>
+        </a>
+
+        <a class="showcase-card" href="#" target="_blank" rel="noreferrer">
+          <div class="showcase-card-image">M</div>
+          <div class="showcase-card-overlay">
+            <div class="showcase-card-name">Metrix</div>
+            <div class="showcase-card-hint">Analytics dashboard for indie makers</div>
+          </div>
+          <span class="showcase-card-go">view &rarr;</span>
+        </a>
+
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>
